@@ -96,6 +96,7 @@ A few examples using `when` and `unless`:
 ``` bash
 on_eval_board() { grep -q EVK /sys/firmware/devicetree/base/model; }
 arch_is_arm64() { test "$(uname -m)" = "aarch64"; }
+kernel_version_is() { test "$(uname -r | cut -d '.' -f 1,2)" = "$1"; }
 
 unless "on_eval_board" \
   as "Custom LED controller was detected" \
@@ -104,6 +105,9 @@ unless "on_eval_board" \
 when "arch_is_arm64" \
   unless "on_eval_board" \
     cukinia_kmod some_driver 
+
+when "kernel_version_is 6.9" \
+  cukinia_kconf MITIGATION_RETPOLIN y
 ```
 * `on <test_result> <statement>`: Can execute a statemement conditionally to test result
 For each test result some statements can be executed:
